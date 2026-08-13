@@ -52,9 +52,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactApp", policy =>
     {
-        policy
-            .WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
+        policy 
+            .AllowAnyOrigin() 
+            .AllowAnyHeader() 
             .AllowAnyMethod();
     });
 });
