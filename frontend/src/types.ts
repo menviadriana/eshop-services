@@ -1,6 +1,24 @@
-// Estos tipos reflejan exactamente lo que devuelven Basket.API y Orders.API.
-// Ver Basket.API/Basket/GetBasket/GetBasketEndPoints.cs y
-// Orders.API/Contracts/OrderResponse.cs
+// Estos tipos reflejan exactamente lo que devuelven Catalog.API, Basket.API
+// y Orders.API. Ver:
+// - Catalog.API/Models/Products/GetProducts/GetProductsEndPoint.cs
+// - Basket.API/Basket/GetBasket/GetBasketEndPoints.cs
+// - Orders.API/Contracts/OrderResponse.cs
+
+export interface Product {
+  id: string
+  name: string
+  description: string
+  category: string[]
+  imageFiles: string
+  price: number
+}
+
+export interface PaginatedProducts {
+  pageNumber: number
+  pageSize: number
+  totalCount: number
+  data: Product[]
+}
 
 export interface BasketItem {
   productId: string
@@ -44,3 +62,9 @@ export interface ApiProblem {
   detail?: string
   status?: number
 }
+
+// Las vistas de la aplicación una vez logueado. Se maneja como estado local
+// en vez de una librería de rutas (react-router) para mantener el proyecto
+// simple: no hay URLs profundas que compartir, todo vive dentro de una sola
+// sesión de compra.
+export type View = 'dashboard' | 'products' | 'cart' | 'my-tickets' | 'ticket'

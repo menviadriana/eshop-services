@@ -339,3 +339,270 @@ button:disabled {
   text-align: center;
   font-family: var(--sans);
 }
+
+/* ---------------- Login ---------------- */
+
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  text-align: center;
+}
+
+.login-logo {
+  font-family: var(--serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.login-hint {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.login-input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: var(--sans);
+}
+
+.login-button {
+  width: 100%;
+}
+
+/* ---------------- Nav ---------------- */
+
+.app-nav {
+  padding: 1rem 2rem;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.app-nav-links {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  position: relative;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  padding: 0.5rem 0.85rem;
+}
+
+.nav-link-active {
+  background: var(--surface);
+  border-color: var(--line);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.nav-badge {
+  display: inline-block;
+  margin-left: 0.35rem;
+  background: var(--rust);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  padding: 0.05rem 0.4rem;
+}
+
+.app-nav-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+}
+
+.small {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.7rem;
+}
+
+.layout-single {
+  flex: 1;
+  padding: 2rem;
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ---------------- Tables ---------------- */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.data-table th {
+  text-align: left;
+  color: var(--ink-soft);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.data-table td {
+  padding: 0.6rem;
+  border-bottom: 1px dashed var(--line);
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+.row-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+/* ---------------- Products ---------------- */
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.product-card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.product-card h3 {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  color: var(--ink-soft);
+}
+
+.inline-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding: 0.9rem;
+  background: var(--paper);
+  border-radius: 8px;
+}
+
+.inline-form input {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: var(--sans);
+}
+
+.success-banner {
+  margin-top: 1rem;
+  padding: 0.7rem 0.9rem;
+  background: #e4efe8;
+  border: 1px solid var(--moss);
+  color: var(--moss);
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+/* ---------------- Cart ---------------- */
+
+.cart-item-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.cart-item-price {
+  margin: 0.15rem 0 0;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+}
+
+.qty-input {
+  width: 60px;
+  padding: 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  text-align: center;
+  font-family: var(--mono);
+}
+
+.checkout-summary {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.checkout-summary h3 {
+  font-family: var(--serif);
+  margin: 0 0 0.5rem;
+}
+
+.checkout-button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* ---------------- Ticket ---------------- */
+
+.receipt-success {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.receipt-success-emoji {
+  font-size: 2rem;
+}
+
+.receipt-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}

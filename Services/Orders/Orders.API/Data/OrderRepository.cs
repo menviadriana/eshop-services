@@ -69,6 +69,24 @@ namespace Orders.API.Data
             }
         }
 
+        public async Task<List<Order>> GetAllAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await _orders
+                    .Find(FilterDefinition<Order>.Empty)
+                    .SortByDescending(o => o.CreatedAt)
+                    .Limit(200)
+                    .ToListAsync(cancellationToken);
+            }
+            catch (MongoException ex)
+            {
+                throw new InternalServerException(
+                    "Ocurrió un error al consultar el historial global de órdenes.",
+                    ex.Message);
+            }
+        }
+
         public async Task CreateAsync(Order order, CancellationToken cancellationToken)
         {
             try
