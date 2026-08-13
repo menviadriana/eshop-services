@@ -75,9 +75,6 @@ function Cart({ userName, onOrderCreated, onCartChanged }: Props) {
     setError(null)
     setLoading(true)
     try {
-      // Una Idempotency-Key nueva por cada intento de compra: si el usuario
-      // hace doble clic o reenvía por un error de red, el backend detecta la
-      // repetición y no genera una orden duplicada.
       const idempotencyKey = crypto.randomUUID()
       const newOrder = await createOrder(userName, userName, idempotencyKey)
       setCart(null)
@@ -92,29 +89,29 @@ function Cart({ userName, onOrderCreated, onCartChanged }: Props) {
 
   const subtotal = cart?.items.reduce((sum, i) => sum + i.price * i.quantity, 0) ?? 0
   const taxPreview = subtotal * TAX_RATE
+  const isEmpty = !cart || cart.items.length === 0
 
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <h2>🛒 Tu Carrito</h2>
-        <span className="tag">{userName}</span>
-      </div>
+    <section className="cart-layout">
+      <div className="panel cart-items-panel">
+        <div className="panel-header">
+          <h2>Artículos seleccionados</h2>
+          <span className="tag">{userName}</span>
+        </div>
 
-      {error && <p className="error-banner">{error}</p>}
+        {error && <p className="error-banner">{error}</p>}
 
-      {!cart || cart.items.length === 0 ? (
-        <p className="empty">
-          El carrito de <strong>{userName}</strong> está vacío. Ve a "Productos" para agregar
-          algo.
-        </p>
-      ) : (
-        <>
-          <ul className="cart-list">
-            {cart.items.map((item) => (
-              <li key={item.productId} className="cart-row">
-                <div>
+        {isEmpty ? (
+          <p className="empty">
+            No tienes nada en el carrito todavía. Ve a "Productos" para elegir algo.
+          </p>
+        ) : (
+          <ul className="cart-list-v2">
+            {cart!.items.map((item) => (
+              <li key={item.productId} className="cart-row-v2">
+                <div className="cart-row-v2-info">
                   <p className="cart-item-name">{item.productName}</p>
-                  <p className="cart-item-price">Precio unitario: {money(item.price)}</p>
+                  <p className="cart-item-price">{money(item.price)} c/u</p>
                 </div>
                 <input
                   type="number"
@@ -124,38 +121,45 @@ function Cart({ userName, onOrderCreated, onCartChanged }: Props) {
                   onChange={(e) => handleQuantityChange(item.productId, Number(e.target.value))}
                   disabled={loading}
                 />
+                <span className="num cart-row-v2-line">{money(item.price * item.quantity)}</span>
                 <button
                   className="ghost small"
                   onClick={() => handleRemove(item.productId)}
                   disabled={loading}
                 >
-                  🗑 Eliminar
+                  Quitar
                 </button>
               </li>
             ))}
           </ul>
+        )}
+      </div>
 
-          <div className="checkout-summary">
-            <h3>Resumen de Compra</h3>
-            <div className="receipt-row">
-              <span>Subtotal</span>
-              <span className="num">{money(subtotal)}</span>
-            </div>
-            <div className="receipt-row">
-              <span>IVA (16%)</span>
-              <span className="num">{money(taxPreview)}</span>
-            </div>
-            <div className="receipt-row receipt-total">
-              <span>Total</span>
-              <span className="num">{money(subtotal + taxPreview)}</span>
-            </div>
-
-            <button className="primary checkout-button" onClick={handleCheckout} disabled={loading}>
-              💳 Pagar y Generar Ticket
-            </button>
-          </div>
-        </>
-      )}
+      <aside className="panel cart-summary-panel">
+        <h2>Resumen</h2>
+        <div className="receipt-row">
+          <span>Subtotal</span>
+          <span className="num">{money(subtotal)}</span>
+        </div>
+        <div className="receipt-row">
+          <span>IVA estimado (16%)</span>
+          <span className="num">{money(taxPreview)}</span>
+        </div>
+        <div className="receipt-row receipt-total">
+          <span>Total estimado</span>
+          <span className="num">{money(subtotal + taxPreview)}</span>
+        </div>
+        <p className="cart-summary-note">
+          El total definitivo lo calcula el servidor al confirmar la compra.
+        </p>
+        <button
+          className="primary checkout-button"
+          onClick={handleCheckout}
+          disabled={loading || isEmpty}
+        >
+          Confirmar compra
+        </button>
+      </aside>
     </section>
   )
 }

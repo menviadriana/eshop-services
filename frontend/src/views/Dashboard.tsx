@@ -32,53 +32,67 @@ function Dashboard({ onView }: Props) {
     load()
   }, [])
 
+  const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0)
+  const confirmedCount = orders.filter((o) => o.status === 'Confirmed').length
+  const pendingCount = orders.filter((o) => o.status === 'Pending').length
+
   return (
     <section className="panel">
       <div className="panel-header">
-        <h2>📊 Historial Global de Tickets</h2>
+        <h2>Panorama general</h2>
         <button className="ghost" onClick={load} disabled={loading}>
-          🔄 Actualizar Lista
+          Actualizar
         </button>
+      </div>
+
+      <div className="stat-row">
+        <div className="stat-card">
+          <span className="stat-label">Órdenes totales</span>
+          <span className="stat-value">{orders.length}</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Ingresos acumulados</span>
+          <span className="stat-value">{money(totalRevenue)}</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Confirmadas</span>
+          <span className="stat-value">{confirmedCount}</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Pendientes</span>
+          <span className="stat-value">{pendingCount}</span>
+        </div>
       </div>
 
       {error && <p className="error-banner">{error}</p>}
 
+      <h3 className="section-subtitle">Todas las órdenes</h3>
+
       {orders.length === 0 ? (
         <p className="empty">Todavía no hay órdenes en el sistema.</p>
       ) : (
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>ID Orden</th>
-              <th>Cliente</th>
-              <th>Total</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order) => (
-              <tr key={order.id}>
-                <td className="mono">{order.id.slice(0, 8)}...</td>
-                <td>{order.customerId}</td>
-                <td className="num">{money(order.total)}</td>
-                <td>
-                  <span className={`status status-${order.status.toLowerCase()}`}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="row-actions">
-                  <button className="ghost small" onClick={() => onView(order)}>
-                    👁 Ver
-                  </button>
-                  <button className="ghost small" onClick={() => downloadOrderPdf(order.id)}>
-                    📄 PDF
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="order-card-list">
+          {orders.map((order) => (
+            <div className="order-card" key={order.id}>
+              <div className="order-card-top">
+                <span className="mono order-card-id">{order.id.slice(0, 8)}</span>
+                <span className={`status status-${order.status.toLowerCase()}`}>
+                  {order.status}
+                </span>
+              </div>
+              <p className="order-card-customer">Cliente: {order.customerId}</p>
+              <p className="order-card-total">{money(order.total)}</p>
+              <div className="order-card-actions">
+                <button className="ghost small" onClick={() => onView(order)}>
+                  Ver detalle
+                </button>
+                <button className="ghost small" onClick={() => downloadOrderPdf(order.id)}>
+                  PDF
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </section>
   )
