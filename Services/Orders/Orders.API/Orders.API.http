@@ -1,0 +1,80 @@
+@Orders.API_HostAddress = http://localhost:5095
+@Basket.API_HostAddress = http://localhost:6001
+
+### 0. Primero, agrega un producto al carrito en Basket.API para tener con qué probar
+POST {{Basket.API_HostAddress}}/basket
+Content-Type: application/json
+
+{
+  "cart": {
+    "userName": "adriana",
+    "items": [
+      {
+        "quantity": 2,
+        "color": "N/A",
+        "price": 150.50,
+        "productId": "00000000-0000-0000-0000-000000000001",
+        "productName": "Producto de prueba"
+      }
+    ]
+  }
+}
+
+### P1: Crear orden válida -> 201 Created
+POST {{Orders.API_HostAddress}}/api/orders
+Content-Type: application/json
+Idempotency-Key: prueba-clave-001
+
+{
+  "customerId": "adriana",
+  "basketId": "adriana"
+}
+
+### P2: Consultar orden -> 200 OK (reemplaza {id} por el que devolvió P1)
+GET {{Orders.API_HostAddress}}/api/orders/{id}
+Accept: application/json
+
+### Consultar órdenes por cliente
+GET {{Orders.API_HostAddress}}/api/orders/customer/adriana
+Accept: application/json
+
+### P3: Basket vacío -> 400 Bad Request (usa un customerId sin carrito)
+POST {{Orders.API_HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "cliente-sin-carrito",
+  "basketId": "cliente-sin-carrito"
+}
+
+### P4: Repetir la misma Idempotency-Key -> no crea una segunda orden (200 OK, misma orden que P1)
+POST {{Orders.API_HostAddress}}/api/orders
+Content-Type: application/json
+Idempotency-Key: prueba-clave-001
+
+{
+  "customerId": "adriana",
+  "basketId": "adriana"
+}
+
+### P5: Pending -> Confirmed -> 200 OK (reemplaza {id})
+PATCH {{Orders.API_HostAddress}}/api/orders/{id}/status
+Content-Type: application/json
+
+{
+  "status": "Confirmed"
+}
+
+### P6: Transición inválida (Confirmed -> Cancelled ya no aplica desde Confirmed) -> 409 Conflict
+PATCH {{Orders.API_HostAddress}}/api/orders/{id}/status
+Content-Type: application/json
+
+{
+  "status": "Cancelled"
+}
+
+### Documentación interactiva (Swagger)
+GET {{Orders.API_HostAddress}}/swagger/index.html
+
+### Health check
+GET {{Orders.API_HostAddress}}/health

@@ -1,0 +1,35 @@
+version: '3.4'
+
+services:
+
+  catalog.api:
+    container_name: catalog.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__CatalogDb: "Host=${CATALOG_DB_HOST};Port=${CATALOG_DB_PORT};Database=railway;Username=postgres;Password=${CATALOG_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true;Include Error Detail=true"
+    ports:
+      - "6002:8080"
+
+  basket.api:
+    container_name: basket.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 8080
+      ConnectionStrings__Database: "Host=${BASKET_DB_HOST};Port=${BASKET_DB_PORT};Database=railway;Username=postgres;Password=${BASKET_DB_PASSWORD};SSL Mode=Require;Trust Server Certificate=true;Include Error Detail=true"
+      ConnectionStrings__Redis: "${BASKET_REDIS_HOST}:${BASKET_REDIS_PORT},password=${BASKET_REDIS_PASSWORD},user=default"
+    ports:
+      - "6001:8080"
+
+  orders.api:
+    container_name: orders.api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_HTTP_PORTS: 8080
+      MongoDb__ConnectionString: "${MONGO_CONNECTION_STRING}"
+      # Dentro de la red de Docker Compose, los servicios se llaman por su
+      # nombre de servicio (no por localhost). Por eso aquí sí es basket.api:8080
+      # y no localhost:6001 (eso solo aplica cuando corres fuera de Docker).
+      BasketApi__BaseUrl: "http://basket.api:8080"
+    ports:
+      - "6003:8080"
